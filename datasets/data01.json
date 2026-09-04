@@ -74876,6 +74876,12 @@
                                     "answer_start": "0",
                                     "text": "1931 yılında"
                                 }
+                            ],
+                            "outputs": [
+                                {
+                                    "text": "İstanbul Boğazı köprü inşası 1931 yılında başlatıldı.",
+                                    "jaccard_score": 28.57142857142857
+                                }
                             ]
                         }
                     ],
