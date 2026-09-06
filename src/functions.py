@@ -4,6 +4,8 @@ import json
 import unicodedata
 from vnlp import Normalizer, StopwordRemover, StemmerAnalyzer
 import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 DATA_PATH = Path(__file__).resolve().parent.parent / "datasets" / "data01.json"
@@ -135,3 +137,44 @@ def jaccard_similarity(answer: str, reference: str) -> float:
 
     return len(answer_set & reference_set) / len(union) * 100 # 0-100
 
+
+def tfidf_vectors(answer: str, reference: str):
+    """
+    Transform answer and reference texts into TF-IDF vectors.
+
+    Parameters:
+        answer (str): The candidate answer.
+        reference (str): The reference answer.
+
+    Returns:
+        tuple: TF-IDF vectors for answer and reference.
+    """
+    vectorizer = TfidfVectorizer()
+
+    vectors = vectorizer.fit_transform([answer, reference])
+
+    return vectors[0], vectors[1]
+
+
+def cosine_similarity_score(answer: str, reference: str) -> float:
+    """
+    Calculate cosine similarity between two TF-IDF vectors.
+
+    Parameters:
+        answer (str): The candidate answer.
+        reference (str): The reference answer.
+
+    Returns:
+        float: Cosine similarity score (0-100).
+    """
+    answer_vector, reference_vector = tfidf_vectors(
+        answer,
+        reference,
+    )
+
+    score = cosine_similarity(
+        answer_vector,
+        reference_vector,
+    )[0][0]
+
+    return float(score * 100)

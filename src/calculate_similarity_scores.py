@@ -1,26 +1,26 @@
 import json
 from pathlib import Path
 
-from functions import jaccard_similarity, preprocess_text
+from functions import cosine_similarity_score, preprocess_text
 
 
 DATA_PATH = Path("datasets/data01.json")
 
 
-def calculate_jaccard_score(
+def calculate_similarity_score(
     question_id: int,
     candidate_text: str,
     data_path: Path = DATA_PATH,
 ) -> float:
     """
-    Calculate Jaccard similarity between a candidate answer
+    Calculate TF-IDF cosine similarity between a candidate answer
     and the reference answer(s) of a question.
 
-    If multiple reference answers exist, the highest Jaccard
+    If multiple reference answers exist, the highest cosine
     similarity score is used.
 
     The result is stored under:
-        qa["outputs"]["jaccard_scores"]
+        qa["outputs"]["cosine_scores"]
 
     Only the matching QA object is modified.
 
@@ -30,7 +30,7 @@ def calculate_jaccard_score(
         data_path: Path to the dataset.
 
     Returns:
-        Best Jaccard similarity score in the range [0, 100].
+        Best cosine similarity score in the range [0, 100].
     """
 
     # Load dataset
@@ -38,9 +38,7 @@ def calculate_jaccard_score(
         with data_path.open("r", encoding="utf-8") as f:
             data = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
-        raise RuntimeError(
-            f"Failed to load dataset: {e}"
-        ) from e
+        raise RuntimeError(f"Failed to load dataset: {e}") from e
 
     # Find the requested question
     qa = None
@@ -78,35 +76,35 @@ def calculate_jaccard_score(
     # Preprocess candidate once
     processed_candidate = preprocess_text(candidate_text)
 
-    jaccard_scores = []
+    cosine_scores = []
 
     # Compare candidate against every reference
     for reference in references:
         processed_reference = preprocess_text(reference)
 
-        score = jaccard_similarity(
+        score = cosine_similarity_score(
             processed_candidate,
             processed_reference,
         )
 
-        jaccard_scores.append(score)
+        cosine_scores.append(score)
 
     # Use the best matching reference
-    best_score = max(jaccard_scores)
+    best_score = max(cosine_scores)
 
     # Create outputs object if it doesn't exist
     if "outputs" not in qa:
         qa["outputs"] = {}
 
-    # Create jaccard_scores list if it doesn't exist
-    if "jaccard_scores" not in qa["outputs"]:
-        qa["outputs"]["jaccard_scores"] = []
+    # Create cosine_scores list if it doesn't exist
+    if "cosine_scores" not in qa["outputs"]:
+        qa["outputs"]["cosine_scores"] = []
 
     # Append candidate and score
-    qa["outputs"]["jaccard_scores"].append(
+    qa["outputs"]["cosine_scores"].append(
         {
             "text": candidate_text,
-            "jaccard_score": float(best_score),
+            "cosine_score": float(best_score),
         }
     )
 
@@ -131,9 +129,9 @@ if __name__ == "__main__":
     question_id = int(input("Question ID: "))
     candidate_text = input("Candidate answer: ")
 
-    score = calculate_jaccard_score(
+    score = calculate_similarity_score(
         question_id=question_id,
         candidate_text=candidate_text,
     )
 
-    print(f"Jaccard similarity: {score:.2f}")
+    print(f"TF-IDF Cosine similarity: {score:.2f}")

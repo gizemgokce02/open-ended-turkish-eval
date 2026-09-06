@@ -74877,12 +74877,20 @@
                                     "text": "1931 yılında"
                                 }
                             ],
-                            "outputs": [
-                                {
-                                    "text": "İstanbul Boğazı köprü inşası 1931 yılında başlatıldı.",
-                                    "jaccard_score": 28.57142857142857
-                                }
-                            ]
+                            "outputs": {
+                                "jaccard_scores": [
+                                    {
+                                        "text": "İstanbul Boğazı köprü inşası 1931 yılında başlatıldı.",
+                                        "jaccard_score": 28.57142857142857
+                                    }
+                                ],
+                                "cosine_scores": [
+                                    {
+                                        "text": "İstanbul Boğazı köprü inşası 1931 yılında başlatıldı.",
+                                        "cosine_score": 41.03626449521847
+                                    }
+                                ]
+                            }
                         }
                     ],
                     "context": "1931 yılında İstanbul Boğazı’na köprü inşası projesini başlattı. Yurtdışından uzmanlar getirerek incelemeler yaptırdı; San Francisco’daki Golden Gate Köprüsü ile aynı sistemde bir köprü inşa etmeleri için Golden Gate’i inşa eden firmayla anlaştı. Tüm hazırlıkları bitmiş olan projeyi 1934’te cumhurbaşkanı Atatürk’e sundu. Cumhurbaşkanı tarafından beğenilse de proje hükümetten onay alamadı ve proje gerçekleşmedi. Bu, Nuri Demirağ’da çok büyük bir hayal kırıklığı yarattı.\r\n"
